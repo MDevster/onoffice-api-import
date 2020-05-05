@@ -10,6 +10,11 @@
 
 namespace ContaoEstateManager\OnOfficeApiImport;
 
+use Contao\Database;
+use Contao\File;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
 use ContaoEstateManager\InterfaceModel;
 use ContaoEstateManager\ProviderModel;
 use Oveleon\ContaoOnofficeApiBundle\OnOfficeRead;
@@ -19,7 +24,7 @@ use Oveleon\ContaoOnofficeApiBundle\OnOfficeRead;
  * @package ContaoEstateManager\Project
  * @author  Fabian Ekert <fabian@oveleon.de>
  */
-class OnOfficeApiImport extends \System
+class OnOfficeApiImport extends System
 {
 
     /**
@@ -53,7 +58,7 @@ class OnOfficeApiImport extends \System
     public function manuallyDownloadApiStream($context)
     {
         if ($context->interface->type === 'onofficeapi') {
-            if (\Input::get('downloadOnOfficeApiStream')) {
+            if (Input::get('downloadOnOfficeApiStream')) {
                 $this->downloadApiStream($context);
             }
 
@@ -81,7 +86,7 @@ class OnOfficeApiImport extends \System
 
         if ($arrData['status']['errorcode'] === 0)
         {
-            \File::putContent($context->importFolder->path . '/' . $fileName, serialize($arrData['data']));
+            File::putContent($context->importFolder->path . '/' . $fileName, serialize($arrData['data']));
 
             $objInterface->lastSync = $syncTime;
             $objInterface->save();
@@ -124,7 +129,7 @@ class OnOfficeApiImport extends \System
      */
     protected function syncData()
     {
-        $skipRecords = \StringUtil::deserialize($this->objInterface->skipRecords, true);
+        $skipRecords = StringUtil::deserialize($this->objInterface->skipRecords, true);
 
         $contactPersonMeta = $this->getTableMetaData('tl_contact_person');
         $realEstateMeta = $this->getTableMetaData('tl_real_estate');
@@ -261,7 +266,7 @@ class OnOfficeApiImport extends \System
         $data = file_get_contents(TL_ROOT . '/' . $this->objImporter->syncFile);
 
         try {
-            $this->data = \StringUtil::deserialize($data, true);
+            $this->data = StringUtil::deserialize($data, true);
         } catch (\Exception $e) {
             return false;
         }
@@ -373,7 +378,7 @@ class OnOfficeApiImport extends \System
     {
         $arrReturn = array();
 
-        $objDatabase = \Database::getInstance();
+        $objDatabase = Database::getInstance();
         $arrFields = $objDatabase->listFields($strTable);
 
         foreach ($arrFields as $key => $meta)
