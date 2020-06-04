@@ -20,7 +20,7 @@
   "require":{
     "php":">=7.1",
     "contao/core-bundle":"^4.4",
-    "contao-estatemanager/core": "dev-master",
+    "contao-estatemanager/core": "*",
     "oveleon/contao-onoffice-api-bundle": "^1.0"
   },
   "require-dev": {
